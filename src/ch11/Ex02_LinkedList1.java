@@ -3,6 +3,11 @@ package ch11;
 import java.util.Collections;
 import java.util.LinkedList;
 
+/*
+ * Collection <- List 
+ * 			  <- Queue     <- LinkedList
+ * 			  <- Dequeue
+ * */
 public class Ex02_LinkedList1 {
 
 	public static void main(String[] args) {

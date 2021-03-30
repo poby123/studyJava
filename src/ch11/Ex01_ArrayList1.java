@@ -3,6 +3,10 @@ package ch11;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/*
+ * Collection <- List <- ArrayList
+ * */
+
 public class Ex01_ArrayList1 {
 
 	/*

@@ -41,10 +41,13 @@ public class Ex01_Lambda {
 	// 리스트의 모든 요소를 출력하는 람다식
 	static Consumer<List<?>> printAll = (l) -> l.forEach(i -> System.out.print(i + " "));
 
+	
+	
 	public static void main(String[] args) {
 		/* 람다식 기초1 */
 		System.out.println("/* Part1 */");
 		MyFunction maxF = (a, b) -> a > b ? a : b; // 람다식을 인터페이스로 참조
+		
 		System.out.println("Max : " + maxF.max(3, 5)); // 호출
 		System.out.println();
 
@@ -53,7 +56,7 @@ public class Ex01_Lambda {
 		ArrayList<Integer> b2l = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
 		printAll.accept(b2l);
 		System.out.println();
-
+		
 		b2l.removeIf(i -> i % 2 == 0); // 2의 배수 삭제
 		printAll.accept(b2l);
 		System.out.println();

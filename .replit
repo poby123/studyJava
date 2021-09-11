@@ -1,0 +1,2 @@
+language = "java11"
+run = "cd src; javac etc/*.java; java etc/HelloWorld"

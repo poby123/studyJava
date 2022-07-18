@@ -48,36 +48,6 @@ class SumArrays implements Runnable {
     }
 }
 
-class Account {
-    private BigDecimal balance;
-
-    public Account() {
-        this(0);
-    }
-
-    public Account(int b) {
-        this.balance = new BigDecimal(b);
-    }
-
-    public synchronized BigDecimal withdraw(BigDecimal target) {
-        if (balance.compareTo(target) > 0) {
-            balance = balance.subtract(target);
-            System.out.println("After withdraw " + target + " \t/\t balance : " + balance);
-            return target;
-        }
-        return new BigDecimal(0);
-    }
-
-    public synchronized boolean deposit(BigDecimal input) {
-        if (input.compareTo(new BigDecimal(0)) >= 0) {
-            balance = balance.add(input);
-            System.out.println("After deposit " + input + " \t/\t balance : " + balance);
-            return true;
-        }
-        return false;
-    }
-}
-
 public class Exam1 {
 
     public static void runE1() {
@@ -120,7 +90,7 @@ public class Exam1 {
 
         Runnable depositRunnable = new Runnable() {
             public void run() {
-                // synchronized (this) {
+                synchronized (this) {
                     for (int i = 0; i < 5; i++) {
                         try {
                             Thread.sleep(1);
@@ -130,13 +100,13 @@ public class Exam1 {
 
                         }
                     }
-                // }
+                }
             }
         };
 
         Runnable withDrawRunnable = new Runnable() {
             public void run() {
-                // synchronized (this) {
+                synchronized (this) {
                     for (int i = 0; i < 5; i++) {
                         try {
                             Thread.sleep(1);
@@ -146,7 +116,7 @@ public class Exam1 {
 
                         }
                     }
-                // }
+                }
             }
         };
 

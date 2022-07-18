@@ -15,7 +15,8 @@ public class ReentrantLocks {
     private static Consumer<Integer> deposit = (Integer val) -> account.deposit(new BigDecimal(val));
     private static Consumer<Integer> withdraw = (Integer val) -> account.withdraw(new BigDecimal(val));
 
-    private static BiFunction<Consumer<Integer>, Integer, Runnable> outsideLock = (Consumer<Integer> f, Integer sleepTime) -> {
+    private static BiFunction<Consumer<Integer>, Integer, Runnable> outsideLock = (Consumer<Integer> f,
+            Integer sleepTime) -> {
         return new Runnable() {
             public void run() {
                 key.lock();
@@ -25,7 +26,7 @@ public class ReentrantLocks {
                         Thread.sleep(sleepTime);
                     }
                 } catch (InterruptedException ie) {
-    
+
                 } finally {
                     key.unlock();
                 }
@@ -33,16 +34,17 @@ public class ReentrantLocks {
         };
     };
 
-    private static BiFunction<Consumer<Integer>, Integer, Runnable> insideLock = (Consumer<Integer> f, Integer sleepTime) -> {
+    private static BiFunction<Consumer<Integer>, Integer, Runnable> insideLock = (Consumer<Integer> f,
+            Integer sleepTime) -> {
         return new Runnable() {
             public void run() {
                 for (int i = 0; i < 5; i++) {
                     key.lock();
                     try {
-                        account.deposit(new BigDecimal(100));
+                        f.accept(100);
                         Thread.sleep(sleepTime);
                     } catch (InterruptedException ie) {
-    
+
                     } finally {
                         key.unlock();
                     }
@@ -72,7 +74,7 @@ public class ReentrantLocks {
         }
     };
 
-    public static double measureTime(BiConsumer<Runnable, Runnable> f, Runnable r1, Runnable r2){
+    public static double measureTime(BiConsumer<Runnable, Runnable> f, Runnable r1, Runnable r2) {
         long sum = 0L;
         final int N = 10;
 
@@ -88,15 +90,14 @@ public class ReentrantLocks {
     public static void main(String... args) {
         Runnable r1 = outsideLock.apply(deposit, 0);
         Runnable r2 = outsideLock.apply(withdraw, 0);
-
-        // 현재의 inside lock은 기아가 생긴다. 조건변수를 이용해 해결해보자.
         Runnable r3 = insideLock.apply(deposit, 0);
         Runnable r4 = insideLock.apply(withdraw, 0);
-    
+
         double avgOutLock = measureTime(reentrantExample, r1, r2);
-        // double avgInLock = measureTime(reentrantExample, r3, r4);
+        account = new Account();
+        double avgInLock = measureTime(reentrantExample, r3, r4);
 
         System.out.println("Lock at outside of loop, Avg Running time : " + avgOutLock + " ms");
-        // System.out.println("Lock at inside of loop, Avg Running time : " + avgInLock + " ms");
+        System.out.println("Lock at inside of loop, Avg Running time : " + avgInLock + " ms");
     }
 }

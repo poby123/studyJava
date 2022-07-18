@@ -1,7 +1,9 @@
 package threads;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 class PrintX implements Runnable {
@@ -118,38 +120,40 @@ public class Exam1 {
 
         Runnable depositRunnable = new Runnable() {
             public void run() {
-                synchronized (this) {
+                // synchronized (this) {
                     for (int i = 0; i < 5; i++) {
                         try {
-                            Thread.sleep(100);
+                            Thread.sleep(1);
                             account.deposit(new BigDecimal(100));
+                            System.out.println("Deposit in " + Thread.currentThread().getName());
                         } catch (InterruptedException ie) {
 
                         }
                     }
-                }
+                // }
             }
         };
 
         Runnable withDrawRunnable = new Runnable() {
             public void run() {
-                synchronized (this) {
+                // synchronized (this) {
                     for (int i = 0; i < 5; i++) {
                         try {
-                            Thread.sleep(100);
+                            Thread.sleep(1);
                             account.withdraw(new BigDecimal(200));
+                            System.out.println("Withdraw in " + Thread.currentThread().getName());
                         } catch (InterruptedException ie) {
 
                         }
                     }
-                }
+                // }
             }
         };
 
-        Thread deposit = new Thread(depositRunnable);
-        Thread deposit2 = new Thread(depositRunnable);
-        Thread withdraw = new Thread(withDrawRunnable);
-        Thread withdraw2 = new Thread(withDrawRunnable);
+        Thread deposit = new Thread(depositRunnable, "deposit1");
+        Thread deposit2 = new Thread(depositRunnable, "deposit2");
+        Thread withdraw = new Thread(withDrawRunnable, "withdraw1");
+        Thread withdraw2 = new Thread(withDrawRunnable, "withdraw2");
 
         deposit.start();
         deposit2.start();
@@ -169,7 +173,11 @@ public class Exam1 {
     public static void main(String[] args) {
         // runE1();
         // runE2();
+        long startTime = System.currentTimeMillis();
         runE3();
+        long endTime = System.currentTimeMillis();
+
+        System.out.println("Running time : " + (endTime - startTime));
     }
 }
 
@@ -207,4 +215,79 @@ public class Exam1 {
  * After deposit 100 / balance : 300
  * After withdraw 200 / balance : 100
  * After deposit 100 / balance : 200
+ */
+
+/**
+ * Method Synchronized : 1과 2가 번갈아가면서 실행됨. 약 15ms의 실행시간
+ * After deposit 100 / balance : 100
+ * Deposit in deposit1
+ * Withdraw in withdraw2
+ * After deposit 100 / balance : 200
+ * Deposit in deposit2
+ * Withdraw in withdraw1
+ * Withdraw in withdraw2
+ * After deposit 100 / balance : 300
+ * Deposit in deposit1
+ * After deposit 100 / balance : 400
+ * Deposit in deposit2
+ * After withdraw 200 / balance : 200
+ * Withdraw in withdraw1
+ * Withdraw in withdraw2
+ * After deposit 100 / balance : 300
+ * Deposit in deposit1
+ * After deposit 100 / balance : 400
+ * Deposit in deposit2
+ * After withdraw 200 / balance : 200
+ * Withdraw in withdraw1
+ * Withdraw in withdraw2
+ * After deposit 100 / balance : 300
+ * Deposit in deposit1
+ * After withdraw 200 / balance : 100
+ * Withdraw in withdraw1
+ * After deposit 100 / balance : 200
+ * Deposit in deposit2
+ * Withdraw in withdraw2
+ * After deposit 100 / balance : 300
+ * Deposit in deposit1
+ * After withdraw 200 / balance : 100
+ * Withdraw in withdraw1
+ * After deposit 100 / balance : 200
+ * 
+ * 
+ * Synchronized in run mehtod : 1이 실행되고, 2가 실행됨. 약 20ms 실행시간
+ * 
+ * Withdraw in withdraw1
+ * After deposit 100 / balance : 100
+ * Deposit in deposit1
+ * Withdraw in withdraw1
+ * After deposit 100 / balance : 200
+ * Deposit in deposit1
+ * Withdraw in withdraw1
+ * After deposit 100 / balance : 300
+ * Deposit in deposit1
+ * After withdraw 200 / balance : 100
+ * Withdraw in withdraw1
+ * After deposit 100 / balance : 200
+ * Deposit in deposit1
+ * Withdraw in withdraw1
+ * After deposit 100 / balance : 300
+ * Deposit in deposit1
+ * After withdraw 200 / balance : 100
+ * Withdraw in withdraw2
+ * After deposit 100 / balance : 200
+ * Deposit in deposit2
+ * Withdraw in withdraw2
+ * After deposit 100 / balance : 300
+ * Deposit in deposit2
+ * After withdraw 200 / balance : 100
+ * Withdraw in withdraw2
+ * After deposit 100 / balance : 200
+ * Deposit in deposit2
+ * Withdraw in withdraw2
+ * After deposit 100 / balance : 300
+ * Deposit in deposit2
+ * After withdraw 200 / balance : 100
+ * Withdraw in withdraw2
+ * After deposit 100 / balance : 200
+ * Deposit in deposit2
  */
